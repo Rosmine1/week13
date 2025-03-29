@@ -8,21 +8,30 @@ $(document).ready(function () {
   //create Base URL variable
   const BASE_URL = "http://localhost:4000";
 
+  // define the type for name object
+
+  interface Name {
+    id: number;
+    text: string;
+  }
+  
+
   
 
   //get all names from DB
-  const fetchNames = async () => {
+  const fetchNames = async (): Promise<Name[]> => {
     const response = await fetch(`${BASE_URL}/names`);
     const data = await response.json();
     return data;
   };
+  
 
-  //get a names by its ID
-  const fetchName = async (id: number) => { 
-    const response = await fetch(`${BASE_URL}/names/${id}`);
-    const data = await response.json();
-    return data;
-  };
+  // //get a names by its ID
+  // const fetchName = async (id: number) => { 
+  //   const response = await fetch(`${BASE_URL}/names/${id}`);
+  //   const data = await response.json();
+  //   return data;
+  // };
 
   //add a new name to the server
   const addName = async (text:string) => {
@@ -48,7 +57,9 @@ $(document).ready(function () {
     $("#todoList").empty();
 
     // Loop through the names array and append each todo to the list
-    names.forEach(function (name:string, index: number) {
+
+    
+    names.forEach(function (name: Name) {
       let nameItem = `<li class="list-group-item d-flex justify-content-between align-items-center">
                                   <span class="todo-text ${
                                     name.text ? "text" : " "}">${name.text}</span>
@@ -77,7 +88,8 @@ $(document).ready(function () {
 
     //add the names  to the server
     try {
-      await addName(text);
+      await addName(text as string);
+;
     } catch (error) {
       console.log(error);
     } finally {
@@ -93,9 +105,10 @@ $(document).ready(function () {
   $(document).on("click", ".deleteTodo", async function () {
     const id = $(this).data("index");
     console.log("deleting", { id });
-    await fetch(`${BASE_URL}/names/${id}`, {
+    await fetch(`${BASE_URL}/names/${id.toString()}`, {
       method: "DELETE",
     });
+    
 
     // Re-render the names again 
     render();
