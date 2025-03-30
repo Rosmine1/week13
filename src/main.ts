@@ -6,7 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 // alert("connected");
 $(document).ready(function () {
   //create Base URL variable
-  const BASE_URL = "http://localhost:4000";
+  const BASE_URL = "http://localhost:3000";
 
   // define the type for name object
 
@@ -51,27 +51,23 @@ $(document).ready(function () {
   };
 
   
-  //function to retrieve data from the server and render it to the page
-  const render = async () => {
-    const names = await fetchNames();
-    $("#todoList").empty();
+  // Function to retrieve data from the server and render it to the page
+const render = async () => {
+  const names = await fetchNames();
+  $("#todoList").empty();
 
-    // Loop through the names array and append each todo to the list
+  // Loop through the names array and append each name to the list
+  names.forEach(function (name: Name) {
+    let nameItem = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="todo-text">${name.text}</span>
+                            <div>
+                                <button class="btn btn-sm btn-danger deleteTodo" data-index="${name.id}">Delete</button>
+                            </div>
+                        </li>`;
+    $("#todoList").append(nameItem);
+  });
+};
 
-    
-    names.forEach(function (name: Name) {
-      let nameItem = `<li class="list-group-item d-flex justify-content-between align-items-center">
-                                  <span class="todo-text ${
-                                    name.text ? "text" : " "}">${name.text}</span>
-                                  <div>
-                                      <button class="btn btn-sm btn-danger deleteTodo" data-index="${
-                                        name.id
-                                      }">Delete</button>
-                                  </div>
-                              </li>`;
-      $("#todoList").append(nameItem);
-    });
-  };
 
   // Call the render function when the page loads
   render();
